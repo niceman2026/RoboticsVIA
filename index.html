@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colour Randomiser</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .labels,
+    .boxes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .labels {
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .label,
+    .colour-box {
+      width: 150px;
+    }
+
+    .colour-box {
+      height: 150px;
+      border: 1px solid #cccccc;
+      border-radius: 12px;
+      transition: background-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .colour-box.pop {
+      transform: scale(1.04);
+    }
+
+    button {
+      margin-top: 28px;
+      padding: 14px 38px;
+      font-size: 20px;
+      font-weight: bold;
+      border: 1px solid #888;
+      border-radius: 12px;
+      cursor: pointer;
+      background: #f3f3f3;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 540px) {
+      .labels,
+      .boxes {
+        gap: 10px;
+      }
+
+      .label,
+      .colour-box {
+        width: 28vw;
+        max-width: 120px;
+      }
+
+      .colour-box {
+        height: 28vw;
+        max-height: 120px;
+      }
+
+      .labels {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="labels">
+    <div class="label">First</div>
+    <div class="label">Second</div>
+    <div class="label">Third</div>
+  </div>
+
+  <div class="boxes" aria-live="polite">
+    <div class="colour-box"></div>
+    <div class="colour-box"></div>
+    <div class="colour-box"></div>
+  </div>
+
+  <button id="pressBtn" type="button">Press</button>
+
+  <script>
+    const boxes = document.querySelectorAll('.colour-box');
+    const pressBtn = document.getElementById('pressBtn');
+
+    const colours = [
+      { name: 'Red', value: '#ff0000' },
+      { name: 'Purple', value: '#5b168f' },
+      { name: 'Yellow', value: '#facc15' }
+    ];
+
+    function shuffle(items) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function randomiseColours() {
+      const shuffled = shuffle(colours);
+
+      boxes.forEach((box, index) => {
+        box.style.backgroundColor = shuffled[index].value;
+        box.setAttribute('aria-label', shuffled[index].name);
+        box.classList.remove('pop');
+        void box.offsetWidth;
+        box.classList.add('pop');
+      });
+
+      setTimeout(() => {
+        boxes.forEach(box => box.classList.remove('pop'));
+      }, 180);
+    }
+
+    pressBtn.addEventListener('click', randomiseColours);
+
+    randomiseColours();
+  </script>
+
+</body>
+</html>
